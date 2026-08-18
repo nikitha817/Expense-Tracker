@@ -2,7 +2,6 @@ import numpy as np
 # [maths, physics, chemistry, biology, english]
 subjects = np.array(["Maths", "Physics", "Chemistry", "Biology", "English"])
 students = np.array(["Student 1", "Student 2", "Student 3"])
-
 marks = np.array([[39, 58, 76, 95, 65],
                  [40, 59, 77, 96, 66],
                  [92, 44, 68, 88, 70]])
@@ -52,3 +51,10 @@ def broadcasting_example():
     new_marks = marks + bonus
     print(np.where(new_marks>100 ,100 ,new_marks))
 broadcasting_example()
+def normalisation_example():
+    print("=" *50)
+    print("Normalisation Example".center(50))
+    print("=" *50)
+    normalisation = (marks - np.min(marks)) / (np.max(marks) - np.min(marks))
+    print(f"{'Normalised Marks':<25}: {normalisation.round(2)}")
+normalisation_example()
