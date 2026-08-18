@@ -1,6 +1,6 @@
 import numpy as np
 month = np.array(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
-def get_sales_data(month, products, sales):
+def get_sales_data(month):
     products = np.array([input("Enter product 1: "), input("Enter product 2: "), input("Enter product 3: "), input("Enter product 4: "), input("Enter product 5: ")])
     sales = np.array([[float(input(f"Enter sales for month 1, {products[0]}: ")), float(input(f"Enter sales for month 1, {products[1]}: ")), float(input(f"Enter sales for month 1, {products[2]}: ")), float(input(f"Enter sales for month 1, {products[3]}: ")), float(input(f"Enter sales for month 1, {products[4]}: "))],
                   [float(input(f"Enter sales for month 2, {products[0]}: ")), float(input(f"Enter sales for month 2, {products[1]}: ")), float(input(f"Enter sales for month 2, {products[2]}: ")), float(input(f"Enter sales for month 2, {products[3]}: ")), float(input(f"Enter sales for month 2, {products[4]}: "))],
@@ -24,7 +24,6 @@ def get_sales_data(month, products, sales):
     for i, product in enumerate(products):
         yearly_sales = np.sum(sales[:, i])
         print(f"{product}: {yearly_sales}")
-    
     return products, sales
 def report_sales(products, sales):
     if sales is None or products is None:
@@ -34,35 +33,54 @@ def report_sales(products, sales):
     print("Sales Report: ".center(50))
     print("=" *50)
     average_sales_per_product = np.mean(sales, axis=0)
-    Yearly_sales_per_product = np.sum(sales, axis=0)
-    Highest_sales_product_index = np.argmax(Yearly_sales_per_product)
-    print(f"Product with highest sales: {products[Highest_sales_product_index]} with sales of {Yearly_sales_per_product[Highest_sales_product_index]}")
-    Lowest_sales_product_index = np.argmin(Yearly_sales_per_product)
-    print(f"Product with lowest sales: {products[Lowest_sales_product_index]} with sales of {Yearly_sales_per_product[Lowest_sales_product_index]}")
+    yearly_sales_per_product = np.sum(sales, axis=0)
+    Highest_sales_product_index = np.argmax(yearly_sales_per_product)
+    print(f"Product with highest sales: {products[Highest_sales_product_index]} with sales of {yearly_sales_per_product[Highest_sales_product_index]}")
+    Lowest_sales_product_index = np.argmin(yearly_sales_per_product)
+    print(f"Product with lowest sales: {products[Lowest_sales_product_index]} with sales of {yearly_sales_per_product[Lowest_sales_product_index]}")
     print("Average sales per product: ")
     for i, product in enumerate(products):
         print(f"{product}: {average_sales_per_product[i]}")
     print("Yearly Sales per Product: ")
     for i, product in enumerate(products):
-        print(f"{product}: {Yearly_sales_per_product[i]}")
-    print("=" *50)
-    print("Monthly Sales Analysis".center(50))
-    print("=" *50)
-    print("Total Sales per Month: ")
-    total_sales_per_month = np.sum(sales, axis=1)
-    for i, total in enumerate(total_sales_per_month):
-        print(f"Month {month[i]}: {total}")
-    print("Total Sales per Product: ")
-    for i, product in enumerate(products):
-        print(f"{product}: {Yearly_sales_per_product[i]}")
-    best_product = np.argmax(Yearly_sales_per_product)
-    worst_product = np.argmin(Yearly_sales_per_product)
-    print(f"Best Product: {products[best_product]} with sales of {Yearly_sales_per_product[best_product]}")
-    print(f"Worst Product: {products[worst_product]} with sales of {Yearly_sales_per_product[worst_product]}")
-    best_sales_month = np.argmax(total_sales_per_month)
-    worst_sales_month = np.argmin(total_sales_per_month)
-    print(f"Best Sales Month: Month {month[best_sales_month]} with sales of {total_sales_per_month[best_sales_month]}")
-    print(f"Worst Sales Month: Month {month[worst_sales_month]} with sales of {total_sales_per_month[worst_sales_month]}")
+        print(f"{product}: {yearly_sales_per_product[i]}")
+    while True:
+        print("1.View Product\n2.View Month\n3.View Best Product/ Worst Product\n4.View Best Month/ Worst Month\n5.Monthly Sales Analysis\n6.Exit")
+        user_input = input("What would you like to do? ").strip().lower()
+        if user_input == "1":
+            product_index = int(input("Enter product index (0-4): "))
+            if 0 <= product_index < len(products):
+                print("-" *50)
+                print(f"Product: {products[product_index]}")
+                print("-" *50)
+                print(f"Sales for {products[product_index]}: {sales[:, product_index]}")
+                print(f"Average sales for {products[product_index]}: {average_sales_per_product[product_index]}")
+                print(f"Highest sales: {np.max(sales[:, product_index])}")
+                print(f"Lowest sales: {np.min(sales[:, product_index])}")
+            else:
+                print("Invalid product index.")
+        elif user_input == "2":
+            month_index = int(input("Enter month index (0-11): "))
+            if 0 <= month_index < len(month):
+                print(f"Sales for {month[month_index]}: {sales[month_index, :]}")
+            else:
+                print("Invalid month index.")
+        elif user_input == "3":
+            best_product = np.argmax(yearly_sales_per_product)
+            worst_product = np.argmin(yearly_sales_per_product)
+            print(f"Best Product: {products[best_product]} with sales of {yearly_sales_per_product[best_product]}")
+            print(f"Worst Product: {products[worst_product]} with sales of {yearly_sales_per_product[worst_product]}")
+        elif user_input == "4":
+            best_month = np.argmax(np.sum(sales, axis=1))
+            worst_month = np.argmin(np.sum(sales, axis=1))
+            print(f"Best Month: {month[best_month]} with sales of {np.sum(sales[best_month, :])}")
+            print(f"Worst Month: {month[worst_month]} with sales of {np.sum(sales[worst_month, :])}")
+        elif user_input == "5":
+            monthly_sales_analysis(products, sales)
+        elif user_input == "6":
+            break
+        else:
+            print("Invalid input. Please enter a number between 1 and 6.")
     sales_performance = np.where(sales > average_sales_per_product, 'sales increased', 'sales decreased')
     print("Sales Performance per Product per Month: ")
     for i, product in enumerate(products):
@@ -73,6 +91,20 @@ def report_sales(products, sales):
     print(sales)
     sales= sales + 100
     print(sales)
+    def monthly_sales_analysis(products, sales):
+        if sales is None or products is None:
+            print("Sales data is not available. Please get sales data first.")
+            return
+        print("=" *50)
+        print("Monthly Sales Analysis: ".center(50))
+        print("=" *50)
+        yearly_sales_per_product = np.sum(sales, axis=0)
+        for i, product in enumerate(products):
+            print(f"Monthly sales for {product}: {sales[:, i]}")
+        best_sales_month = np.argmax(yearly_sales_per_product)
+        worst_sales_month = np.argmin(yearly_sales_per_product)
+        print(f"Best Sales Month: Month {month[best_sales_month]} with sales of {yearly_sales_per_product[best_sales_month]}")
+        print(f"Worst Sales Month: Month {month[worst_sales_month]} with sales of {yearly_sales_per_product[worst_sales_month]}")
 def profit_analysis(products, sales):
     if sales is None or products is None:
         print("Sales data is not available. Please get sales data first.")
@@ -122,7 +154,7 @@ def main():
         print("1.Get Sales Data\n2.Report Sales\n3.Profit Analysis\n4.Growth Analysis\n5.Sales Normalization\n6.Exit")
         user_input = input("What do you want to do? ").strip()
         if user_input.lower() == '1':
-            products, sales = get_sales_data()
+            products, sales = get_sales_data(month)
         elif user_input.lower() == '2':
             report_sales(products, sales)
         elif user_input.lower() == '3':
@@ -135,6 +167,6 @@ def main():
             print("Exiting the program.")
             return
         else:
-            print("Invalid input. Please enter a number between 1 and 5.")
+            print("Invalid input. Please enter a number between 1 and 6.")
 if __name__ == "__main__":
     main()
