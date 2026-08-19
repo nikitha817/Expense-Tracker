@@ -91,20 +91,20 @@ def report_sales(products, sales):
     print(sales)
     sales= sales + 100
     print(sales)
-    def monthly_sales_analysis(products, sales):
-        if sales is None or products is None:
-            print("Sales data is not available. Please get sales data first.")
-            return
-        print("=" *50)
-        print("Monthly Sales Analysis: ".center(50))
-        print("=" *50)
-        yearly_sales_per_product = np.sum(sales, axis=0)
-        for i, product in enumerate(products):
-            print(f"Monthly sales for {product}: {sales[:, i]}")
-        best_sales_month = np.argmax(yearly_sales_per_product)
-        worst_sales_month = np.argmin(yearly_sales_per_product)
-        print(f"Best Sales Month: Month {month[best_sales_month]} with sales of {yearly_sales_per_product[best_sales_month]}")
-        print(f"Worst Sales Month: Month {month[worst_sales_month]} with sales of {yearly_sales_per_product[worst_sales_month]}")
+def monthly_sales_analysis(products, sales):
+    if sales is None or products is None:
+        print("Sales data is not available. Please get sales data first.")
+        return
+    print("=" *50)
+    print("Monthly Sales Analysis: ".center(50))
+    print("=" *50)
+    yearly_sales_per_product = np.sum(sales, axis=0)
+    for i, product in enumerate(products):
+        print(f"Monthly sales for {product}: {sales[:, i]}")
+    best_sales_month = np.argmax(yearly_sales_per_product)
+    worst_sales_month = np.argmin(yearly_sales_per_product)
+    print(f"Best Sales Month: Month {month[best_sales_month]} with sales of {yearly_sales_per_product[best_sales_month]}")
+    print(f"Worst Sales Month: Month {month[worst_sales_month]} with sales of {yearly_sales_per_product[worst_sales_month]}")
 def profit_analysis(products, sales):
     if sales is None or products is None:
         print("Sales data is not available. Please get sales data first.")
