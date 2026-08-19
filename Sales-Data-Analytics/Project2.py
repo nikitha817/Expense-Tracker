@@ -34,18 +34,15 @@ def report_sales(products, sales):
     print("=" *50)
     average_sales_per_product = np.mean(sales, axis=0)
     yearly_sales_per_product = np.sum(sales, axis=0)
-    Highest_sales_product_index = np.argmax(yearly_sales_per_product)
-    print(f"Product with highest sales: {products[Highest_sales_product_index]} with sales of {yearly_sales_per_product[Highest_sales_product_index]}")
-    Lowest_sales_product_index = np.argmin(yearly_sales_per_product)
-    print(f"Product with lowest sales: {products[Lowest_sales_product_index]} with sales of {yearly_sales_per_product[Lowest_sales_product_index]}")
+    Highest_sales = np.max(yearly_sales_per_product)
+    print(f"Product with highest sales: {products[Highest_sales]} with sales of {yearly_sales_per_product[Highest_sales]}")
+    Lowest_sales = np.min(yearly_sales_per_product)
+    print(f"Product with lowest sales: {products[Lowest_sales]} with sales of {yearly_sales_per_product[Lowest_sales]}")
     print("Average sales per product: ")
     for i, product in enumerate(products):
         print(f"{product}: {average_sales_per_product[i]}")
-    print("Yearly Sales per Product: ")
-    for i, product in enumerate(products):
-        print(f"{product}: {yearly_sales_per_product[i]}")
     while True:
-        print("1.View Product\n2.View Month\n3.View Best Product/ Worst Product\n4.View Best Month/ Worst Month\n5.Monthly Sales Analysis\n6.Exit")
+        print("1.View Product\n2.View Month\n3.View Best Product/ Worst Product\n4.View Best Month/ Worst Month\n5.Exit")
         user_input = input("What would you like to do? ").strip().lower()
         if user_input == "1":
             product_index = int(input("Enter product index (0-4): "))
@@ -76,8 +73,6 @@ def report_sales(products, sales):
             print(f"Best Month: {month[best_month]} with sales of {np.sum(sales[best_month, :])}")
             print(f"Worst Month: {month[worst_month]} with sales of {np.sum(sales[worst_month, :])}")
         elif user_input == "5":
-            monthly_sales_analysis(products, sales)
-        elif user_input == "6":
             break
         else:
             print("Invalid input. Please enter a number between 1 and 6.")
@@ -151,7 +146,7 @@ def main():
     while True:
         print("=" *50)
         print("Sales Data Analytics".center(50))
-        print("1.Get Sales Data\n2.Report Sales\n3.Profit Analysis\n4.Growth Analysis\n5.Sales Normalization\n6.Exit")
+        print("1.Get Sales Data\n2.Report Sales\n3.Profit Analysis\n4.Growth Analysis\n5.Monthly Sales Analysis\n6.Sales Normalization\n7.Exit")
         user_input = input("What do you want to do? ").strip()
         if user_input.lower() == '1':
             products, sales = get_sales_data(month)
@@ -162,11 +157,13 @@ def main():
         elif user_input.lower() == '4':
             growth_analysis(products, sales)
         elif user_input.lower() == '5':
-            sales_normalization(sales)
+            monthly_sales_analysis(products, sales)
         elif user_input.lower() == '6':
+            sales_normalization(sales)
+        elif user_input.lower() == '7':
             print("Exiting the program.")
             return
         else:
-            print("Invalid input. Please enter a number between 1 and 6.")
+            print("Invalid input. Please enter a number between 1 and 7.")
 if __name__ == "__main__":
     main()
