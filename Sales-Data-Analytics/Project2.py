@@ -1,4 +1,21 @@
 import numpy as np
+import json
+def save_sales_data(products, sales):
+    data = {"products": products.tolist(), "sales": sales.tolist()}
+    with open("sales_data.json", "w") as f:
+        json.dump(data, f, indent=4)
+        print("Sales data saved to sales_data.json")
+def load_sales_data():
+    try:
+        with open("sales_data.json", "r") as f:
+            data = json.load(f)
+            products = np.array(data["products"])
+            sales = np.array(data["sales"])
+            print("Sales data loaded from sales_data.json")
+            return products, sales
+    except FileNotFoundError:
+        print("No saved sales data found.")
+        return None, None
 month = np.array(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"])
 def get_sales_data(month):
     products = np.array([input("Enter product 1: "), input("Enter product 2: "), input("Enter product 3: "), input("Enter product 4: "), input("Enter product 5: ")])
@@ -24,6 +41,7 @@ def get_sales_data(month):
     for i, product in enumerate(products):
         yearly_sales = np.sum(sales[:, i])
         print(f"{product}: {yearly_sales}")
+    save_sales_data(products, sales)
     return products, sales
 def report_sales(products, sales):
     if sales is None or products is None:
@@ -146,21 +164,23 @@ def main():
     while True:
         print("=" *50)
         print("Sales Data Analytics".center(50))
-        print("1.Get Sales Data\n2.Report Sales\n3.Profit Analysis\n4.Growth Analysis\n5.Monthly Sales Analysis\n6.Sales Normalization\n7.Exit")
+        print("1.Get Sales Data\n2.Load Sales Data\n3Report Sales\n4.Profit Analysis\n5.Growth Analysis\n6.Monthly Sales Analysis\n7.Sales Normalization\n8.Exit")
         user_input = input("What do you want to do? ").strip()
         if user_input.lower() == '1':
             products, sales = get_sales_data(month)
         elif user_input.lower() == '2':
-            report_sales(products, sales)
+            products, sales = load_sales_data()
         elif user_input.lower() == '3':
-            profit_analysis(products, sales)
+            report_sales(products, sales)
         elif user_input.lower() == '4':
-            growth_analysis(products, sales)
+            profit_analysis(products, sales)
         elif user_input.lower() == '5':
-            monthly_sales_analysis(products, sales)
+            growth_analysis(products, sales)
         elif user_input.lower() == '6':
-            sales_normalization(sales)
+            monthly_sales_analysis(products, sales)
         elif user_input.lower() == '7':
+            sales_normalization(sales)
+        elif user_input.lower() == '8':
             print("Exiting the program.")
             return
         else:
