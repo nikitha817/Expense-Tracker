@@ -52,10 +52,10 @@ def report_sales(products, sales):
     print("=" *50)
     average_sales_per_product = np.mean(sales, axis=0)
     yearly_sales_per_product = np.sum(sales, axis=0)
-    Highest_sales = np.max(yearly_sales_per_product)
-    print(f"Product with highest sales: {products[Highest_sales]} with sales of {yearly_sales_per_product[Highest_sales]}")
-    Lowest_sales = np.min(yearly_sales_per_product)
-    print(f"Product with lowest sales: {products[Lowest_sales]} with sales of {yearly_sales_per_product[Lowest_sales]}")
+    Highest_sales = np.max(sales)
+    print(f"Product with highest sales: {Highest_sales}")
+    Lowest_sales = np.min(sales)
+    print(f"Product with lowest sales: {Lowest_sales}")
     print("Average sales per product: ")
     for i, product in enumerate(products):
         print(f"{product}: {average_sales_per_product[i]}")
@@ -141,7 +141,7 @@ def growth_analysis(products, sales):
         return
     growth_rate = np.zeros(len(sales))
     for i in range(1, len(sales)):
-        growth_rate[i] = (sales[i] - sales[i-1]) / sales[i-1] * 100
+        growth_rate = (sales[i] - sales[i-1]) / sales[i-1] * 100
     print("=" *50)
     print("Growth Analysis: ".center(50))
     print("=" *50)
@@ -155,7 +155,7 @@ def sales_normalization(sales):
     if sales is None:
         print("Sales data is not available. Please get sales data first.")
         return
-    normalized_sales = (sales - np.min(sales, axis=0)) / (np.max(sales, axis=0) - np.min(sales, axis=0))
+    normalized_sales = ((sales - np.min(sales, axis=0)) / (np.max(sales, axis=0) - np.min(sales, axis=0))).round(2)
     print("=" *50)
     print("Sales Normalization: ".center(50))
     print("=" *50)
