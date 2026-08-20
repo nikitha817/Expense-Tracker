@@ -139,18 +139,30 @@ def growth_analysis(products, sales):
     if sales is None or products is None:
         print("Sales data is not available. Please get sales data first.")
         return
-    growth_rate = np.zeros(len(sales))
-    for i in range(1, len(sales)):
-        growth_rate = (sales[i] - sales[i-1]) / sales[i-1] * 100
+    growth_rate = np.zeros_like(sales, dtype=float)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        growth_rate[1:] = np.divide(
+            sales[1:] - sales[:-1],
+            sales[:-1],
+            out=np.zeros_like(sales[1:], dtype=float),
+            where=sales[:-1] != 0,
+        ) * 100
     print("=" *50)
     print("Growth Analysis: ".center(50))
     print("=" *50)
     for i, product in enumerate(products):
-        print(f"Growth rate for {product}: {growth_rate[i]:.2f}%")
-    highest_growth_product_index = np.argmax(growth_rate)
-    lowest_growth_product_index = np.argmin(growth_rate)
-    print(f"Highest Growth Product: {products[highest_growth_product_index]} with growth rate of {growth_rate[highest_growth_product_index]:.2f}%")
-    print(f"Lowest Growth Product: {products[lowest_growth_product_index]} with growth rate of {growth_rate[lowest_growth_product_index]:.2f}%")
+        print(f"Growth rates for {product}: {growth_rate[:, i].round(2)}%")
+    product_growth = np.mean(growth_rate[1:], axis=0)
+    highest_growth_product_index = np.argmax(product_growth)
+    lowest_growth_product_index = np.argmin(product_growth)
+    print(
+        f"Highest Growth Product: {products[highest_growth_product_index]} "
+        f"with growth rate of {product_growth[highest_growth_product_index]:.2f}%"
+    )
+    print(
+        f"Lowest Growth Product: {products[lowest_growth_product_index]} "
+        f"with growth rate of {product_growth[lowest_growth_product_index]:.2f}%"
+    )
 def sales_normalization(sales):
     if sales is None:
         print("Sales data is not available. Please get sales data first.")
